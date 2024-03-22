@@ -33,7 +33,8 @@ public static class SwitchController
     
     private static void CheckFile(string path)
     {
-        if (File.Exists(path) == true) return;
+        if (File.Exists(path) == true) 
+            return;
 
         File.Create(path);
         File.WriteAllText(path, "False");
