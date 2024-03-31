@@ -3,4 +3,4 @@
 POST {{WebApplication1_HostAddress}}/switch/
 Content-Type: application/json
 
-"on"
+"off"
