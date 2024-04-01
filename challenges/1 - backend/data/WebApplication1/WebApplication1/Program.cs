@@ -8,14 +8,17 @@ using WebApplication1.Database.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql("Host=localhost;Port=5438;Database=postgres;Username=postgres;Password=password"));
+    options.UseNpgsql("Host=localhost;Port=5432;Database=selectel;Username=selectel;Password=selectel"));
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+app.Urls.Add("http://178.208.76.115:5024");
+app.Urls.Add("http://localhost:5024");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -25,45 +28,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
-if (!System.IO.File.Exists("switchState.txt"))
-{
-    using (FileStream fs = System.IO.File.Create("switchState.txt"))
-    {
-        byte[] info = new UTF8Encoding(true).GetBytes("off");
-        fs.Write(info, 0, info.Length);
-    }
-}
+app.UseRouting();
 
-app.MapGet("/switch", async (AppDbContext db) =>
-    {
-        var switchState = await db.SwitchStates.FirstOrDefaultAsync();
-        return switchState != null ? Results.Ok(switchState.State) : Results.NotFound();
-    })
-    .WithName("GetSwitchState")
-    .WithOpenApi();
+app.UseAuthorization();
 
-app.MapPost("/switch", async ([FromBody] string state, AppDbContext db) =>
-    {
-        if (state != "on" && state != "off")
-        {
-            return Results.BadRequest("Invalid state. State can be either 'on' or 'off'");
-        }
+app.MapControllers();
 
-        var switchState = await db.SwitchStates.FirstOrDefaultAsync();
-        if (switchState != null)
-        {
-            switchState.State = state;
-        }
-        else
-        {
-            db.SwitchStates.Add(new SwitchState { State = state });
-        }
-
-        await db.SaveChangesAsync();
-        return Results.Ok();
-    })
-    .WithName("SetSwitchState")
-    .WithOpenApi();
 
 app.Run();
