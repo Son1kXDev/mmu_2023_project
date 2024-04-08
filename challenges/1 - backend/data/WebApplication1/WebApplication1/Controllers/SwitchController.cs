@@ -14,15 +14,15 @@ public class SwitchController(AppDbContext db) : ControllerBase
     public async Task<ActionResult> GetSwitch()
     {
         var switchState = await db.SwitchStates.FirstOrDefaultAsync();
-        return switchState != null ? Ok(switchState.State) : NotFound();
+        return switchState != null ? Ok(switchState) : NotFound();
     }
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> SetSwitch([FromBody] string state)
+    public async Task<ActionResult> SetSwitch([FromBody] SwitchState state)
     {
-        if (state != "true" && state != "false")
+        if (state.State != "true" && state.State != "false")
         {
             return BadRequest("Invalid state. State can be either 'true' or 'false'");
         }
@@ -31,19 +31,24 @@ public class SwitchController(AppDbContext db) : ControllerBase
         
         if (switchState != null)
         {
-            if (switchState.State == state)
+            if (state.Id != switchState.Id)
             {
-                return BadRequest($"State is already set to {state}");
+                return BadRequest($"Invalid ID: {state.Id}");
             }
             
-            switchState.State = state;
+            if (switchState.State == state.State)
+            {
+                return BadRequest($"State {state.Id} is already set to {state.State}");
+            }
+            
+            switchState.State = state.State;
         }
         else
         {
-            db.SwitchStates.Add(new SwitchState { State = state });
+            db.SwitchStates.Add(new SwitchState { Id = state.Id, State = state.State });
         }
 
         await db.SaveChangesAsync();
-        return Ok();
+        return Ok(state);
     }
 }

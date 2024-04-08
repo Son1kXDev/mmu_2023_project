@@ -1,0 +1,27 @@
+﻿body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #ffffff;
+    font-family: Arial, sans-serif;
+}
+
+.m-4 {
+    max-width: 70vh;
+    max-height: 30vh;
+    width: 100%;
+    height: 100%;
+    font-size: 72px;
+}
+
+@media (max-width: 600px) {
+    .m-4 {
+        width: 100%;
+        height: 100%;
+        font-size: 48px;
+    }
+}
