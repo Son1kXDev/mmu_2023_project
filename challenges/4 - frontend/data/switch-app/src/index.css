@@ -7,19 +7,46 @@
     padding: 0;
     box-sizing: border-box;
     background-color: #ffffff;
-    font-family: Arial, sans-serif;
+    font-family: cursive;
 }
 
-.m-4 {
+button {
     max-width: 70vh;
     max-height: 30vh;
     width: 100%;
     height: 100%;
     font-size: 72px;
+    color: white;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    transition: all 250ms;
+    border: 0;
+    border-radius: 15px;
 }
 
+button.enabled{
+    background-color: green;
+}
+
+button.disabled{
+    background-color: red;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+button:active {
+    color: slategray;
+    font-size: 62px;
+    transform: scale(0.95);
+}
+
+
 @media (max-width: 600px) {
-    .m-4 {
+    .button {
         width: 100%;
         height: 100%;
         font-size: 48px;

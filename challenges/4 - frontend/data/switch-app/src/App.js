@@ -1,13 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import { Button } from "react-bootstrap";
 
 function App() {
     
     const [state,setState] = useState([{}])
+    let isLoaded = Boolean(state.state !== 'undefined');
     
     useEffect(() => {
         GetSwitch();
-        
+
         const interval = setInterval(() => {
             GetSwitch();
         }, 3000)
@@ -22,9 +22,9 @@ function App() {
         ).then(
             state => {
                 setState(state)
-                console.log(state)
+                console.log("GET: " + state.state)
             }
-        )
+        );
     }
     
     function PostSwitch(newState) {
@@ -35,41 +35,35 @@ function App() {
             },
             body: JSON.stringify({
             "id" : 1,
-            "state" : newState
+            "state" : newState.toLocaleString()
             })
         }).then(
             (response) => response.json()
         ).then(
             state => {
                 setState(state)
-                console.log(state)
+                console.log("POST: " + state.state)
                 return state;
             }
-        )
+        );
     }
     
     return (
         <div>
-            {(typeof state.state === 'undefined') ? (
+            {(isLoaded === false) ? (
                 <p>Loading...</p>
-            ):(
-                (state.state === 'true') ? (
-                    <Button className="m-4" 
-                            variant="success" 
-                            onClick={()=>PostSwitch('false')}>
-                        SWITCH
-                    </Button>
-                ) : (
-                    <Button className="m-4" 
-                            variant="danger" 
-                            onClick={()=>PostSwitch('true')}>
-                        SWITCH
-                    </Button>
-                )
-            )
-            }
+            ): (
+                <button id="switch-button" 
+                        className={((state.state === 'true') ? "enabled" : "disabled") } 
+                        onClick={ () => 
+                            PostSwitch((state.state === 'true') ? 'false' : 'true')
+                }>
+                    SWITCH
+                </button>
+            )}
         </div>
     );
+    
 }
 
 export default App;
