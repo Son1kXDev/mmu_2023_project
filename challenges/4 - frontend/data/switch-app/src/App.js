@@ -3,7 +3,6 @@ import React, {useState, useEffect} from 'react';
 function App() {
     
     const [state,setState] = useState([{}])
-    let isLoaded = Boolean(state.state !== 'undefined');
     
     useEffect(() => {
         GetSwitch();
@@ -50,7 +49,7 @@ function App() {
     
     return (
         <div>
-            {(isLoaded === false) ? (
+            {(typeof(state.state) === 'undefined') ? (
                 <p>Loading...</p>
             ): (
                 <button id="switch-button" 
