@@ -1,0 +1,3 @@
+backend - http://178.208.76.115:5024/switch
+frontend - http://178.208.76.115:3000
+bot - https://t.me/switchstatemmubot
